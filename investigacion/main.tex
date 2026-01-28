@@ -1,0 +1,664 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Investigación: Arquitectura de Software
+% Formato APA - LaTeX/Overleaf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,letterpaper]{article}
+
+% ============== PAQUETES ==============
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+
+% ============== CONFIGURACIÓN ==============
+\setstretch{1.5}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{12pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=blue
+}
+
+% Configuración de código
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red}
+}
+
+% Encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Arquitectura de Software}
+\lhead{Investigación}
+\cfoot{\thepage}
+
+% ============== DATOS DE PORTADA (MODIFICAR) ==============
+\newcommand{\universidadLogo}{logo_universidad.png} % Cambiar por tu logo
+\newcommand{\universidadNombre}{Universidad Tecnológica de México}
+\newcommand{\tituloInvestigacion}{Arquitectura de Software: Requerimientos, Arquitectura Hexagonal, Clean Architecture y Casos de Uso}
+\newcommand{\nombreMateria}{Ingeniería de Software}
+\newcommand{\nombreAlumno}{[Tu Nombre Completo]}
+\newcommand{\carrera}{Ingeniería en Sistemas Computacionales}
+\newcommand{\grupo}{[Tu Grupo]}
+\newcommand{\numeroControl}{[Tu Número de Control]}
+\newcommand{\nombreDocente}{[Nombre del Docente]}
+\newcommand{\lugarFecha}{Ciudad de México, \today}
+
+% ============== DOCUMENTO ==============
+\begin{document}
+
+% ============== PORTADA ==============
+\begin{titlepage}
+    \centering
+    
+    % Logo de la universidad (descomenta y modifica la ruta)
+    % \includegraphics[width=0.25\textwidth]{\universidadLogo}\\[1cm]
+    
+    % Placeholder para el logo
+    \begin{tikzpicture}
+        \draw[thick] (0,0) circle (1.5cm);
+        \node at (0,0) {\textbf{LOGO}};
+    \end{tikzpicture}\\[0.5cm]
+    
+    {\Large\textbf{\universidadNombre}}\\[2cm]
+    
+    {\LARGE\textbf{\tituloInvestigacion}}\\[2cm]
+    
+    {\large\textbf{Materia:} \nombreMateria}\\[0.5cm]
+    
+    \vspace{1cm}
+    
+    \begin{tabular}{ll}
+        \textbf{Alumno:} & \nombreAlumno \\[0.3cm]
+        \textbf{Carrera:} & \carrera \\[0.3cm]
+        \textbf{Grupo:} & \grupo \\[0.3cm]
+        \textbf{Número de Control:} & \numeroControl \\[0.3cm]
+        \textbf{Docente:} & \nombreDocente \\
+    \end{tabular}
+    
+    \vfill
+    
+    {\large \lugarFecha}
+\end{titlepage}
+
+% ============== ÍNDICE ==============
+\newpage
+\tableofcontents
+\newpage
+
+% ============== INTRODUCCIÓN ==============
+\section{Introducción}
+
+En el desarrollo de software moderno, la arquitectura juega un papel fundamental para garantizar la calidad, mantenibilidad y escalabilidad de los sistemas. Esta investigación aborda cinco conceptos esenciales en la ingeniería de software: los requerimientos funcionales y no funcionales, la arquitectura hexagonal, la arquitectura limpia (Clean Architecture) y los casos de uso.
+
+La comprensión de estos conceptos permite a los desarrolladores diseñar sistemas que no solo cumplan con las necesidades del negocio, sino que también sean fáciles de mantener, probar y evolucionar con el tiempo. Estos principios son aplicables en diversos contextos, desde aplicaciones monolíticas hasta sistemas distribuidos y microservicios.
+
+El objetivo de esta investigación es proporcionar una visión integral de estos conceptos, explorando sus definiciones, características principales, beneficios y aplicaciones prácticas en el desarrollo de software.
+
+% ============== DESARROLLO ==============
+\section{Desarrollo}
+
+\subsection{Requerimientos Funcionales}
+
+\subsubsection{Definición}
+
+Los requerimientos funcionales son declaraciones de los servicios que el sistema debe proporcionar, cómo debe reaccionar ante entradas particulares y cómo debe comportarse en situaciones específicas \citep{sommerville2016software}. Describen las funcionalidades que el usuario espera del sistema.
+
+\subsubsection{Características}
+
+\begin{itemize}
+    \item \textbf{Especificidad}: Describen funciones concretas del sistema.
+    \item \textbf{Verificabilidad}: Pueden ser probados para confirmar su cumplimiento.
+    \item \textbf{Orientados al usuario}: Se centran en las necesidades del usuario final.
+    \item \textbf{Comportamiento observable}: Definen acciones visibles del sistema.
+\end{itemize}
+
+\subsubsection{Ejemplos}
+
+\begin{table}[H]
+\centering
+\caption{Ejemplos de Requerimientos Funcionales}
+\begin{tabular}{@{}p{3cm}p{10cm}@{}}
+\toprule
+\textbf{Categoría} & \textbf{Requerimiento} \\
+\midrule
+Autenticación & El sistema debe permitir a los usuarios iniciar sesión con correo y contraseña. \\
+Gestión de datos & El sistema debe permitir crear, leer, actualizar y eliminar registros de usuarios. \\
+Reportes & El sistema debe generar reportes en formato PDF con datos del período seleccionado. \\
+Notificaciones & El sistema debe enviar correos electrónicos cuando se complete una transacción. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Importancia}
+
+Los requerimientos funcionales son la base para:
+\begin{itemize}
+    \item El diseño de la arquitectura del sistema.
+    \item La planificación del desarrollo.
+    \item Las pruebas de aceptación.
+    \item La documentación del sistema.
+\end{itemize}
+
+% --------------------------------------------------
+\subsection{Requerimientos No Funcionales}
+
+\subsubsection{Definición}
+
+Los requerimientos no funcionales son restricciones sobre los servicios o funciones del sistema. Incluyen restricciones de tiempo, sobre el proceso de desarrollo y estándares \citep{sommerville2016software}. Definen atributos de calidad del sistema.
+
+\subsubsection{Categorías Principales}
+
+\begin{enumerate}
+    \item \textbf{Rendimiento}: Tiempos de respuesta, throughput, capacidad.
+    \item \textbf{Seguridad}: Autenticación, autorización, encriptación.
+    \item \textbf{Disponibilidad}: Uptime, tolerancia a fallos.
+    \item \textbf{Escalabilidad}: Capacidad de crecimiento horizontal/vertical.
+    \item \textbf{Usabilidad}: Facilidad de uso, accesibilidad.
+    \item \textbf{Mantenibilidad}: Facilidad de modificación y corrección.
+    \item \textbf{Portabilidad}: Capacidad de funcionar en diferentes entornos.
+\end{enumerate}
+
+\subsubsection{Ejemplos}
+
+\begin{table}[H]
+\centering
+\caption{Ejemplos de Requerimientos No Funcionales}
+\begin{tabular}{@{}p{3cm}p{10cm}@{}}
+\toprule
+\textbf{Categoría} & \textbf{Requerimiento} \\
+\midrule
+Rendimiento & El sistema debe responder en menos de 2 segundos para el 95\% de las peticiones. \\
+Disponibilidad & El sistema debe tener una disponibilidad mínima de 99.9\%. \\
+Seguridad & Las contraseñas deben almacenarse con hash bcrypt con factor de costo 12. \\
+Escalabilidad & El sistema debe soportar hasta 10,000 usuarios concurrentes. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Diferencias con Requerimientos Funcionales}
+
+\begin{table}[H]
+\centering
+\caption{Comparación entre tipos de requerimientos}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Funcionales} & \textbf{No Funcionales} \\
+\midrule
+Enfoque & Qué hace el sistema & Cómo lo hace \\
+Verificación & Pruebas funcionales & Pruebas de rendimiento, carga \\
+Prioridad & Usuario final & Arquitectura técnica \\
+Documentación & Casos de uso & Atributos de calidad \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% --------------------------------------------------
+\subsection{Arquitectura Hexagonal}
+
+\subsubsection{Definición}
+
+La Arquitectura Hexagonal, también conocida como \textit{Ports and Adapters}, fue propuesta por Alistair Cockburn en 2005. Es un patrón arquitectónico que busca crear aplicaciones que sean independientes de la tecnología, permitiendo que la lógica de negocio permanezca aislada de las dependencias externas \citep{cockburn2005hexagonal}.
+
+\subsubsection{Componentes Principales}
+
+\begin{enumerate}
+    \item \textbf{Núcleo de la Aplicación (Core)}: Contiene la lógica de negocio pura, sin dependencias externas.
+    
+    \item \textbf{Puertos (Ports)}: Interfaces que definen cómo la aplicación se comunica con el exterior. Existen dos tipos:
+    \begin{itemize}
+        \item \textbf{Puertos Primarios (Driving)}: Exponen la funcionalidad de la aplicación.
+        \item \textbf{Puertos Secundarios (Driven)}: Definen lo que la aplicación necesita del exterior.
+    \end{itemize}
+    
+    \item \textbf{Adaptadores (Adapters)}: Implementaciones concretas de los puertos que conectan con tecnologías específicas.
+\end{enumerate}
+
+\subsubsection{Diagrama Conceptual}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    hexagon/.style={regular polygon, regular polygon sides=6, minimum size=4cm, draw, thick},
+    adapter/.style={rectangle, draw, thick, minimum width=2cm, minimum height=0.8cm, fill=blue!20},
+    port/.style={circle, draw, thick, minimum size=0.5cm, fill=green!30}
+]
+
+% Hexágono central
+\node[hexagon, fill=yellow!20] (hex) at (0,0) {};
+\node at (0,0) {\textbf{Dominio}};
+\node at (0,-0.5) {\small Lógica de Negocio};
+
+% Puertos y adaptadores
+\node[adapter] (api) at (-4,1) {API REST};
+\node[adapter] (db) at (4,1) {Base de Datos};
+\node[adapter] (ui) at (-4,-1) {UI Web};
+\node[adapter] (ext) at (4,-1) {Servicios Ext.};
+
+% Flechas
+\draw[->, thick] (api) -- (-2,0.5);
+\draw[->, thick] (ui) -- (-2,-0.5);
+\draw[->, thick] (2,0.5) -- (db);
+\draw[->, thick] (2,-0.5) -- (ext);
+
+\end{tikzpicture}
+\caption{Representación de la Arquitectura Hexagonal}
+\end{figure}
+
+\subsubsection{Beneficios}
+
+\begin{itemize}
+    \item \textbf{Testabilidad}: La lógica de negocio puede probarse sin dependencias externas.
+    \item \textbf{Flexibilidad}: Los adaptadores pueden intercambiarse sin afectar el núcleo.
+    \item \textbf{Mantenibilidad}: La separación clara facilita los cambios.
+    \item \textbf{Independencia tecnológica}: El dominio no está acoplado a frameworks específicos.
+\end{itemize}
+
+\subsubsection{Ejemplo de Estructura}
+
+\begin{lstlisting}[language=Python, caption=Estructura de directorios Hexagonal]
+src/
+  application/
+    ports/
+      user_repository.py    # Interface (puerto)
+    services/
+      user_service.py       # Casos de uso
+  domain/
+    entities/
+      user.py               # Entidad de dominio
+  infrastructure/
+    adapters/
+      memory_user_repository.py  # Implementacion
+    api/
+      v1.py                 # Controlador HTTP
+\end{lstlisting}
+
+% --------------------------------------------------
+\subsection{Arquitectura Limpia (Clean Architecture)}
+
+\subsubsection{Definición}
+
+La Clean Architecture, propuesta por Robert C. Martin (Uncle Bob) en 2012, es un conjunto de principios de diseño que busca crear sistemas que sean independientes de frameworks, testables, independientes de la UI, independientes de la base de datos e independientes de cualquier agencia externa \citep{martin2017clean}.
+
+\subsubsection{Capas de la Arquitectura}
+
+\begin{enumerate}
+    \item \textbf{Entidades (Entities)}: Objetos de negocio que encapsulan las reglas más generales y de alto nivel. Son los menos propensos a cambiar.
+    
+    \item \textbf{Casos de Uso (Use Cases)}: Contienen las reglas de negocio específicas de la aplicación. Orquestan el flujo de datos hacia y desde las entidades.
+    
+    \item \textbf{Adaptadores de Interfaz (Interface Adapters)}: Convierten datos del formato más conveniente para los casos de uso a formatos externos.
+    
+    \item \textbf{Frameworks y Drivers}: La capa más externa que incluye frameworks web, bases de datos, etc.
+\end{enumerate}
+
+\subsubsection{La Regla de Dependencia}
+
+El principio fundamental de Clean Architecture es la \textbf{Regla de Dependencia}:
+
+\begin{quote}
+    \textit{Las dependencias del código fuente solo pueden apuntar hacia adentro, hacia las políticas de alto nivel.} \citep{martin2017clean}
+\end{quote}
+
+Esto significa que:
+\begin{itemize}
+    \item Las capas internas no conocen nada de las capas externas.
+    \item Las capas externas dependen de las internas, nunca al revés.
+    \item Los datos cruzan los límites en estructuras simples.
+\end{itemize}
+
+\subsubsection{Diagrama de Capas}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    layer/.style={circle, draw, thick, minimum size=#1, fill opacity=0.3}
+]
+
+% Capas (de afuera hacia adentro)
+\node[layer=6cm, fill=blue] (frameworks) at (0,0) {};
+\node[layer=4.5cm, fill=green] (adapters) at (0,0) {};
+\node[layer=3cm, fill=orange] (usecases) at (0,0) {};
+\node[layer=1.5cm, fill=yellow] (entities) at (0,0) {};
+
+% Etiquetas
+\node at (0,0) {\small\textbf{Entidades}};
+\node at (0,1.2) {\small Casos de Uso};
+\node at (0,2) {\small Adaptadores};
+\node at (0,2.8) {\small Frameworks};
+
+% Flecha de dependencia
+\draw[->, ultra thick] (3.5,-1) -- (1,-1);
+\node at (2.25,-0.5) {\small Dependencia};
+
+\end{tikzpicture}
+\caption{Capas de Clean Architecture con dirección de dependencias}
+\end{figure}
+
+\subsubsection{Comparación con Arquitectura Hexagonal}
+
+\begin{table}[H]
+\centering
+\caption{Comparación entre Arquitectura Hexagonal y Clean Architecture}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Hexagonal} & \textbf{Clean} \\
+\midrule
+Enfoque & Puertos y Adaptadores & Capas concéntricas \\
+Estructura & Hexágono con lados & Círculos anidados \\
+Complejidad & Media & Alta \\
+Detalle & Más abstracta & Más prescriptiva \\
+Origen & Alistair Cockburn (2005) & Robert C. Martin (2012) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Beneficios}
+
+\begin{itemize}
+    \item \textbf{Independencia de frameworks}: El sistema no depende de bibliotecas externas.
+    \item \textbf{Testabilidad}: Las reglas de negocio se prueban sin UI, BD o servidores.
+    \item \textbf{Independencia de UI}: La interfaz puede cambiar fácilmente.
+    \item \textbf{Independencia de BD}: Se puede cambiar de Oracle a MongoDB sin afectar el negocio.
+\end{itemize}
+
+% --------------------------------------------------
+\subsection{Casos de Uso}
+
+\subsubsection{Definición}
+
+Un caso de uso es una descripción de un conjunto de secuencias de acciones, incluyendo variantes, que un sistema realiza para producir un resultado observable de valor para un actor \citep{jacobson1992object}. Representan los requisitos funcionales desde la perspectiva del usuario.
+
+\subsubsection{Elementos de un Caso de Uso}
+
+\begin{enumerate}
+    \item \textbf{Actor}: Entidad externa que interactúa con el sistema.
+    \item \textbf{Precondiciones}: Estado del sistema antes de ejecutar el caso de uso.
+    \item \textbf{Flujo Principal}: Secuencia de pasos en condiciones normales.
+    \item \textbf{Flujos Alternativos}: Variaciones del flujo principal.
+    \item \textbf{Postcondiciones}: Estado del sistema después de la ejecución.
+    \item \textbf{Excepciones}: Manejo de errores y situaciones anómalas.
+\end{enumerate}
+
+\subsubsection{Ejemplo: Caso de Uso "Crear Usuario"}
+
+\begin{table}[H]
+\centering
+\caption{Caso de Uso: Crear Usuario}
+\begin{tabular}{@{}p{4cm}p{10cm}@{}}
+\toprule
+\textbf{Elemento} & \textbf{Descripción} \\
+\midrule
+\textbf{ID} & CU-001 \\
+\textbf{Nombre} & Crear Usuario \\
+\textbf{Actor} & Administrador \\
+\textbf{Descripción} & Permite crear un nuevo usuario en el sistema \\
+\textbf{Precondiciones} & El administrador está autenticado \\
+\textbf{Flujo Principal} & 
+1. El administrador selecciona "Nuevo Usuario" \newline
+2. El sistema muestra el formulario \newline
+3. El administrador ingresa los datos \newline
+4. El sistema valida los datos \newline
+5. El sistema crea el usuario \newline
+6. El sistema confirma la operación \\
+\textbf{Flujo Alternativo} & 
+4a. Si el email existe: mostrar error \newline
+4b. Si datos inválidos: mostrar validaciones \\
+\textbf{Postcondiciones} & Usuario creado y activo en el sistema \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Diagrama de Casos de Uso}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    actor/.style={circle, draw, minimum size=0.5cm},
+    usecase/.style={ellipse, draw, minimum width=3cm, minimum height=1cm}
+]
+
+% Sistema
+\draw[thick] (0,0) rectangle (6,4);
+\node at (3,4.3) {\textbf{Sistema de Usuarios}};
+
+% Actor
+\node[actor] (admin) at (-2,2) {};
+\draw (-2,1.5) -- (-2,0.5);
+\draw (-2.3,1) -- (-1.7,1);
+\draw (-2,0.5) -- (-2.3,0);
+\draw (-2,0.5) -- (-1.7,0);
+\node at (-2,-0.5) {Administrador};
+
+% Casos de uso
+\node[usecase] (crear) at (3,3) {Crear Usuario};
+\node[usecase] (listar) at (3,2) {Listar Usuarios};
+\node[usecase] (eliminar) at (3,1) {Eliminar Usuario};
+
+% Relaciones
+\draw (admin) -- (crear);
+\draw (admin) -- (listar);
+\draw (admin) -- (eliminar);
+
+\end{tikzpicture}
+\caption{Diagrama de Casos de Uso - Sistema de Usuarios}
+\end{figure}
+
+\subsubsection{Casos de Uso en Clean Architecture}
+
+En Clean Architecture, los casos de uso se implementan como clases que:
+
+\begin{itemize}
+    \item Contienen la lógica de aplicación específica.
+    \item Orquestan las llamadas a entidades y servicios.
+    \item Son independientes de la infraestructura.
+    \item Pueden ser probados de forma aislada.
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption=Implementación de Caso de Uso]
+class CreateUserUseCase:
+    def __init__(self, user_repository: UserRepositoryPort):
+        self.user_repository = user_repository
+    
+    async def execute(self, email: str, name: str) -> User:
+        # Validar que no exista
+        existing = await self.user_repository.get_by_email(email)
+        if existing:
+            raise UserAlreadyExistsError(email)
+        
+        # Crear entidad
+        user = User.create(email=email, name=name)
+        
+        # Persistir
+        return await self.user_repository.save(user)
+\end{lstlisting}
+
+% ============== METODOLOGÍA ==============
+\section{Metodología}
+
+Para esta investigación se utilizó una metodología de revisión bibliográfica que incluyó:
+
+\begin{enumerate}
+    \item \textbf{Revisión de literatura}: Consulta de libros especializados en arquitectura de software, particularmente los trabajos de Robert C. Martin, Alistair Cockburn e Ivar Jacobson.
+    
+    \item \textbf{Análisis de documentación técnica}: Revisión de documentación oficial de frameworks y patrones arquitectónicos.
+    
+    \item \textbf{Implementación práctica}: Desarrollo de un proyecto de ejemplo utilizando arquitectura hexagonal con Python y FastAPI para validar los conceptos teóricos.
+    
+    \item \textbf{Síntesis comparativa}: Comparación de los diferentes enfoques arquitectónicos estudiados.
+\end{enumerate}
+
+% ============== CONCLUSIÓN ==============
+\section{Conclusión}
+
+Esta investigación ha explorado cinco conceptos fundamentales en la arquitectura de software moderna. Las principales conclusiones son:
+
+\begin{enumerate}
+    \item Los \textbf{requerimientos funcionales y no funcionales} son complementarios y ambos esenciales para el éxito de un proyecto de software. Mientras los funcionales definen el "qué", los no funcionales definen el "cómo".
+    
+    \item La \textbf{Arquitectura Hexagonal} proporciona un modelo efectivo para desacoplar la lógica de negocio de las dependencias tecnológicas a través del patrón de Puertos y Adaptadores.
+    
+    \item La \textbf{Clean Architecture} extiende estos conceptos con una estructura de capas más detallada y la regla de dependencia como principio fundamental.
+    
+    \item Los \textbf{Casos de Uso} son el puente entre los requerimientos y la implementación, proporcionando una forma estructurada de documentar el comportamiento esperado del sistema.
+    
+    \item La combinación de estos conceptos permite crear sistemas más mantenibles, testables y adaptables a los cambios.
+\end{enumerate}
+
+La aplicación práctica de estos principios, como se demostró en el proyecto de ejemplo, confirma que estas arquitecturas facilitan el desarrollo de software de calidad y son especialmente valiosas en contextos de microservicios y sistemas distribuidos.
+
+% ============== BIBLIOGRAFÍA ==============
+\newpage
+\section{Bibliografía y Fuentes de Información}
+
+\begin{thebibliography}{9}
+
+\bibitem{cockburn2005hexagonal}
+Cockburn, A. (2005). \textit{Hexagonal Architecture}. Recuperado de https://alistair.cockburn.us/hexagonal-architecture/
+
+\bibitem{jacobson1992object}
+Jacobson, I. (1992). \textit{Object-Oriented Software Engineering: A Use Case Driven Approach}. Addison-Wesley.
+
+\bibitem{martin2017clean}
+Martin, R. C. (2017). \textit{Clean Architecture: A Craftsman's Guide to Software Structure and Design}. Prentice Hall.
+
+\bibitem{martin2008clean}
+Martin, R. C. (2008). \textit{Clean Code: A Handbook of Agile Software Craftsmanship}. Prentice Hall.
+
+\bibitem{sommerville2016software}
+Sommerville, I. (2016). \textit{Software Engineering} (10th ed.). Pearson.
+
+\bibitem{fowler2002patterns}
+Fowler, M. (2002). \textit{Patterns of Enterprise Application Architecture}. Addison-Wesley.
+
+\bibitem{vernon2013implementing}
+Vernon, V. (2013). \textit{Implementing Domain-Driven Design}. Addison-Wesley.
+
+\bibitem{evans2003domain}
+Evans, E. (2003). \textit{Domain-Driven Design: Tackling Complexity in the Heart of Software}. Addison-Wesley.
+
+\end{thebibliography}
+
+% ============== ANEXOS ==============
+\newpage
+\section{Anexos}
+
+\subsection{Anexo A: Estructura del Proyecto de Ejemplo}
+
+El proyecto de ejemplo desarrollado para esta investigación implementa un microservicio de gestión de usuarios siguiendo Arquitectura Hexagonal. La estructura completa es:
+
+\begin{lstlisting}[caption=Estructura completa del proyecto]
+Microservicios/
+|-- src/
+|   |-- application/
+|   |   |-- ports/
+|   |   |   |-- __init__.py
+|   |   |   |-- user_repository.py
+|   |   |-- services/
+|   |   |   |-- __init__.py
+|   |   |   |-- user_service.py
+|   |-- core/
+|   |   |-- __init__.py
+|   |   |-- config.py
+|   |   |-- exceptions.py
+|   |-- domain/
+|   |   |-- entities/
+|   |   |   |-- __init__.py
+|   |   |   |-- user.py
+|   |-- infrastructure/
+|   |   |-- adapters/
+|   |   |   |-- __init__.py
+|   |   |   |-- memory_user_repository.py
+|   |   |-- api/
+|   |   |   |-- __init__.py
+|   |   |   |-- v1.py
+|   |   |   |-- v2.py
+|   |-- main.py
+|   |-- main2.py
+|   |-- maincentral.py
+|   |-- run.py
+|   |-- run2.py
+|-- requirements.txt
+|-- .env
+|-- README.md
+\end{lstlisting}
+
+\subsection{Anexo B: Diagrama de Arquitectura Completo}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, thick, minimum width=2.5cm, minimum height=0.8cm, text centered},
+    layer/.style={rectangle, draw, thick, minimum width=10cm, minimum height=2cm, fill=#1}
+]
+
+% Capas
+\node[layer=red!20] (infra) at (0,0) {};
+\node at (-4,0) {\textbf{Infraestructura}};
+
+\node[layer=blue!20] (app) at (0,2.5) {};
+\node at (-4,2.5) {\textbf{Aplicación}};
+
+\node[layer=green!20] (domain) at (0,5) {};
+\node at (-4,5) {\textbf{Dominio}};
+
+% Componentes
+\node[box, fill=white] at (-2,0) {API v1/v2};
+\node[box, fill=white] at (2,0) {MemoryRepo};
+
+\node[box, fill=white] at (-2,2.5) {Puertos};
+\node[box, fill=white] at (2,2.5) {Servicios};
+
+\node[box, fill=white] at (0,5) {Entidades};
+
+% Flechas
+\draw[->, thick] (0,1.2) -- (0,1.8);
+\draw[->, thick] (0,3.3) -- (0,4.2);
+
+\end{tikzpicture}
+\caption{Diagrama de capas del proyecto implementado}
+\end{figure}
+
+\subsection{Anexo C: Tabla de Tecnologías Utilizadas}
+
+\begin{table}[H]
+\centering
+\caption{Stack tecnológico del proyecto}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Categoría} & \textbf{Tecnología} & \textbf{Versión} \\
+\midrule
+Lenguaje & Python & 3.14 \\
+Framework Web & FastAPI & 0.115.0 \\
+Servidor ASGI & Uvicorn & 0.32.0 \\
+Validación & Pydantic & 2.10.0 \\
+Testing & Pytest & 8.3.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
