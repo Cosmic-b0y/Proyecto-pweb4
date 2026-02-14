@@ -1,41 +1,29 @@
-"""
-Main Entry Point - Aplicación Principal
-
-Punto de entrada principal de la aplicación FastAPI.
-Configura la aplicación, middleware y rutas.
-"""
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.config import get_settings
-from src.infrastructure.api.v1 import router as v1_router
-from src.infrastructure.api.v2 import router as v2_router
-from src.infrastructure.api.orders import router as orders_router
+from src.infrastructure.api.v1 import router as users_router
 
 # Obtener configuración
 settings = get_settings()
 
-# Crear aplicación FastAPI
+# Crear aplicación FastAPI - Microservicio de Usuarios
 app = FastAPI(
-    title=settings.app_name,
-    version=settings.app_version,
+    title="Microservicio de Usuarios",
+    version="1.0.0",
     description="""
-    ## Microservicios API - Usuarios y Pedidos
+    ## Microservicio de Usuarios - Puerto 8001
     
-    Sistema de gestión de usuarios y pedidos con:
+    CRUD completo para la gestión de usuarios con:
     - **Arquitectura Hexagonal** (Ports & Adapters)
     - **Clean Architecture**
-    - **Domain-Driven Design (DDD)**
     
-    ### Módulos:
-    - **Usuarios**: Gestión completa de usuarios (v1 y v2)
-    - **Pedidos**: Creación y gestión de pedidos con estados
-    
-    ### Versiones de API:
-    - **v1/users**: API básica de usuarios
-    - **v2/users**: API mejorada con paginación
-    - **v1/orders**: API de pedidos
+    ### Endpoints:
+    - `GET /api/v1/users` - Listar usuarios
+    - `GET /api/v1/users/{id}` - Obtener usuario
+    - `POST /api/v1/users` - Crear usuario
+    - `PUT /api/v1/users/{id}` - Actualizar usuario
+    - `DELETE /api/v1/users/{id}` - Eliminar usuario
     """,
     docs_url="/docs",
     redoc_url="/redoc"
@@ -50,24 +38,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Registrar routers
-app.include_router(v1_router, prefix=settings.api_v1_prefix)
-app.include_router(v2_router, prefix=settings.api_v2_prefix)
-app.include_router(orders_router, prefix=f"{settings.api_v1_prefix}")
+# Registrar router de usuarios
+app.include_router(users_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")
 async def root():
-    """Endpoint raíz con información de la API."""
+    """Endpoint raíz con información del microservicio."""
     return {
-        "name": settings.app_name,
-        "version": settings.app_version,
+        "service": "Microservicio de Usuarios",
+        "version": "1.0.0",
+        "port": 8001,
         "docs": "/docs",
-        "redoc": "/redoc",
-        "api": {
-            "users_v1": f"{settings.api_v1_prefix}/users",
-            "users_v2": f"{settings.api_v2_prefix}/users",
-            "orders": f"{settings.api_v1_prefix}/orders"
+        "endpoints": {
+            "users": f"{settings.api_v1_prefix}/users"
         }
     }
 
@@ -75,14 +59,14 @@ async def root():
 @app.get("/health")
 async def health():
     """Health check endpoint."""
-    return {"status": "healthy"}
+    return {"status": "healthy", "service": "users"}
 
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "main:app",
+        "src.main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=settings.debug
+        port=8001,
+        reload=True
     )

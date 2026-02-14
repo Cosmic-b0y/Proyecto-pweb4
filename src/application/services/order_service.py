@@ -120,6 +120,19 @@ class OrderService:
         order.cancel()
         return await self._order_repository.save(order)
     
+    async def update_order(
+        self,
+        order_id: str,
+        shipping_address: Optional[str] = None,
+        notes: Optional[str] = None
+    ) -> Optional[Order]:
+        """Caso de uso: Actualizar pedido."""
+        order = await self._order_repository.get_by_id(order_id)
+        if not order:
+            return None
+        order.update(shipping_address=shipping_address, notes=notes)
+        return await self._order_repository.save(order)
+    
     async def delete_order(self, order_id: str) -> bool:
         """Caso de uso: Eliminar pedido."""
         return await self._order_repository.delete(order_id)

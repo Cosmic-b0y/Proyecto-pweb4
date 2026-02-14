@@ -122,6 +122,16 @@ class Order:
         self.status = OrderStatus.CANCELLED
         self.updated_at = datetime.utcnow()
     
+    def update(self, shipping_address: Optional[str] = None, notes: Optional[str] = None) -> None:
+        """Actualiza campos del pedido (solo si está pendiente)."""
+        if self.status != OrderStatus.PENDING:
+            raise ValueError("Solo se pueden modificar pedidos pendientes")
+        if shipping_address is not None:
+            self.shipping_address = shipping_address
+        if notes is not None:
+            self.notes = notes
+        self.updated_at = datetime.utcnow()
+    
     def add_item(self, item: OrderItem) -> None:
         """Añade un item al pedido."""
         if self.status != OrderStatus.PENDING:

@@ -1,19 +1,25 @@
 """
-Run2 - Script de ejecución alternativo
-
-Script para iniciar solo la API v1 en un puerto diferente.
+Run2 - Microservicio de Pedidos (Puerto 8002)
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import uvicorn
+from src.core.config import get_settings
+
+settings = get_settings()
 
 if __name__ == "__main__":
-    print("🚀 Iniciando API v1 Only...")
-    print("📚 Documentación: http://localhost:8001/docs")
+    print(">>> Iniciando Microservicio de Pedidos...")
+    print(">>> Documentacion: http://localhost:8002/docs")
+    print(">>> ReDoc: http://localhost:8002/redoc")
     
     uvicorn.run(
         "src.main2:app",
         host="0.0.0.0",
-        port=8001,
-        reload=True,
+        port=8002,
+        reload=settings.debug,
         log_level="info"
     )

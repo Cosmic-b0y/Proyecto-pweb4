@@ -71,6 +71,21 @@ class OrderCreateRequest(BaseModel):
         }
 
 
+
+class OrderUpdateRequest(BaseModel):
+    """Schema para actualizar un pedido."""
+    shipping_address: Optional[str] = None
+    notes: Optional[str] = None
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "shipping_address": "Nueva Calle #456, Ciudad",
+                "notes": "Actualización de dirección"
+            }
+        }
+
+
 class OrderItemResponse(BaseModel):
     """Schema de respuesta para item."""
     product_id: str
@@ -191,6 +206,32 @@ async def create_order(
             shipping_address=request.shipping_address,
             notes=request.notes
         )
+        return OrderResponse(**order.to_dict())
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.put("/{order_id}", response_model=OrderResponse)
+async def update_order(
+    order_id: str,
+    request: OrderUpdateRequest,
+    service: OrderService = Depends(get_order_service)
+):
+    """Actualiza un pedido existente (solo si está pendiente)."""
+    try:
+        order = await service.update_order(
+            order_id=order_id,
+            shipping_address=request.shipping_address,
+            notes=request.notes
+        )
+        if not order:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Pedido '{order_id}' no encontrado"
+            )
         return OrderResponse(**order.to_dict())
     except ValueError as e:
         raise HTTPException(
