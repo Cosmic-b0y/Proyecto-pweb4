@@ -1,9 +1,4 @@
-"""
-Configuración de la Aplicación
 
-Maneja la configuración centralizada usando Pydantic Settings.
-Permite cargar variables de entorno de forma tipada y validada.
-"""
 
 from functools import lru_cache
 from pydantic_settings import BaseSettings
@@ -27,11 +22,18 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     api_v2_prefix: str = "/api/v2"
     
-    # Base de datos
-    database_url: Optional[str] = None
+    # Base de datos MySQL
+    database_url: str = "mysql+aiomysql://root:root@localhost:3306/proyecto_pweb4"
     
-    # Seguridad
+    # Base de datos PostgreSQL
+    database_pg_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/proyecto_pweb4_mecanico"
+    
+    # RabbitMQ
+    rabbitmq_url: str = "amqp://guest:guest@localhost:5672/"
+    
+    # Seguridad / JWT
     secret_key: str = "your-secret-key-here"
+    jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     
     # CORS

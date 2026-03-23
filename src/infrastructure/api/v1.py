@@ -11,8 +11,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 
 from src.application.services.user_service import UserService
-from src.application.ports.user_repository import UserRepositoryPort
-from src.infrastructure.adapters.memory_user_repository import MemoryUserRepository
+from src.infrastructure.api.dependencies import get_user_service
 
 
 # ============== Schemas (DTOs) ==============
@@ -50,27 +49,6 @@ class UserResponse(BaseModel):
     
     class Config:
         from_attributes = True
-
-
-# ============== Dependencias ==============
-
-# Instancia singleton del repositorio (en producción usar inyección de dependencias real)
-_user_repository: Optional[MemoryUserRepository] = None
-
-
-def get_user_repository() -> UserRepositoryPort:
-    """Obtiene la instancia del repositorio de usuarios."""
-    global _user_repository
-    if _user_repository is None:
-        _user_repository = MemoryUserRepository()
-    return _user_repository
-
-
-def get_user_service(
-    repository: UserRepositoryPort = Depends(get_user_repository)
-) -> UserService:
-    """Obtiene la instancia del servicio de usuarios."""
-    return UserService(repository)
 
 
 # ============== Router ==============

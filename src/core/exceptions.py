@@ -1,9 +1,3 @@
-"""
-Excepciones del Dominio
-
-Define las excepciones personalizadas para el manejo de errores
-en las diferentes capas de la aplicación.
-"""
 
 
 class DomainException(Exception):

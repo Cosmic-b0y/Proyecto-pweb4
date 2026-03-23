@@ -1,9 +1,3 @@
-"""
-Entidad de Usuario
-
-Define la entidad de dominio User con sus reglas de negocio.
-Las entidades son objetos con identidad que encapsulan reglas del dominio.
-"""
 
 from dataclasses import dataclass, field
 from datetime import datetime
